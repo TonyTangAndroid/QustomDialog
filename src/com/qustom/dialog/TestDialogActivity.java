@@ -18,8 +18,8 @@ public class TestDialogActivity extends Activity {
 					.setTitleColor(HALLOWEEN_ORANGE)
 					.setDividerColor(HALLOWEEN_ORANGE)
 					.setMessage("You are now entering the 10th dimension.")
-					.setCustomView(android.R.layout.example_ip_address_layout, v.getContext())
-					.setIcon(getResources().getDrawable(android.R.drawable.ic_launcher))
+					.setCustomView(R.layout.example_ip_address_layout, v.getContext())
+					.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
                     .setItems(sa, null);
 			
 			qustomDialogBuilder.show();
@@ -29,7 +29,7 @@ public class TestDialogActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(android.R.layout.activity_main);
+		setContentView(R.layout.activity_main);
 		Button bt = (Button)findViewById(android.R.id.button1);
 		bt.setOnClickListener(mShowDialogClickListener);
 	}
