@@ -1,38 +1,64 @@
 package com.qustom.dialog;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.Toast;
 
 public class TestDialogActivity extends Activity {
 
 	private static final String HALLOWEEN_ORANGE = "#FF7F27";
 
-	private OnClickListener mShowDialogClickListener =new OnClickListener(){
-		public void onClick(View v){
-			String[] sa = {"dog","cat"};
-			QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(v.getContext())
-					.setTitle("Set IP Address")
-					.setTitleColor(HALLOWEEN_ORANGE)
-					.setDividerColor(HALLOWEEN_ORANGE)
-					.setMessage("You are now entering the 10th dimension.")
-					.setCustomView(R.layout.example_ip_address_layout, v.getContext())
-					.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
-                    .setItems(sa, null);
-			
-			qustomDialogBuilder.show();
-		}
-	};
+	public void button1clicked(View view) {
+		String[] sa = {
+				"Alpha",
+				"Bravo",
+				"Charlie",
+//				"Delta",		//TODO: fix Message and customView not visible with list too long 
+//				"Echo",
+//				"Foxtrot",
+//				"Golf",
+//				"Hotel",
+//				"India",
+//				"Juliett",
+//				"Kilo",
+//				"Lima",
+//				"Mike",
+//				"November",
+//				"Oscar",
+//				"Papa",
+//				"Quebec",
+//				"Romeo",
+//				"Sierra",
+//				"Tango",
+//				"Uniform",
+//				"Victor",
+//				"Whiskey",
+//				"X-ray",
+//				"Yankee",
+//				"Zulu"
+				};
+		
+		QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
+				.setTitle("Set IP Address")
+				.setTitleColor(HALLOWEEN_ORANGE)
+				.setDividerColor(HALLOWEEN_ORANGE)
+				.setMessage("You are now entering the 10th dimension.")
+				.setCustomView(R.layout.example_ip_address_layout, this)
+				.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
+                .setItems(sa, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
+					}
+                });
+		
+		qustomDialogBuilder.show();
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Button bt = (Button)findViewById(android.R.id.button1);
-		bt.setOnClickListener(mShowDialogClickListener);
 	}
-
-
 }

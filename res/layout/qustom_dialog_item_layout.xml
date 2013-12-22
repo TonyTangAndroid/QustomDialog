@@ -7,8 +7,10 @@
 
     <TextView
         android:id="@+id/item_text"
-        style="?android:attr/textAppearanceMedium"
-        android:padding="16dip"
+        style="?android:attr/textAppearanceListItemSmall"
+        android:paddingStart="16dip"
+        android:paddingTop="10dip"
+        android:paddingBottom="10dip"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         />
