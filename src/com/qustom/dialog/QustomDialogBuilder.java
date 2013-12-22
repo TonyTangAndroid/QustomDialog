@@ -189,6 +189,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder{
     @Override
     public AlertDialog show() {
     	if (mTitle.getText().equals("")) mDialogView.findViewById(R.id.topPanel).setVisibility(View.GONE);
+    	// hide also message TextView if empty
     	if (mMessage.getText().equals("")) mDialogView.findViewById(R.id.contentPanel).setVisibility(View.GONE);
     	mDialog = super.show();
         return mDialog;
