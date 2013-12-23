@@ -49,10 +49,45 @@ public class TestDialogActivity extends Activity {
 				.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
                 .setItems(sa, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
-					}
+						Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();					}
                 });
 		
+		qustomDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Toast.makeText(TestDialogActivity.this, "'OK' clicked...", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		qustomDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				Toast.makeText(TestDialogActivity.this, "'Cancel' clicked...", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		qustomDialogBuilder.show();
+	}
+	
+	public void button2clicked(View view) {
+		String[] sa = { "Enabled item 1", "Disabled item 1", "Enabled item 2", "Disabled item 2" };
+		
+		int[] disabledItems = new int[] {1,3};
+		
+		QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
+		.setTitle("none")
+		.setTitleColor(HALLOWEEN_ORANGE)
+		.setDividerColor(HALLOWEEN_ORANGE)
+		.setMessage("You are now exiting the 10th dimension.")
+		.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
+        .setItems(sa, disabledItems, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
+			}
+        });
+
 		qustomDialogBuilder.show();
 	}
 	
