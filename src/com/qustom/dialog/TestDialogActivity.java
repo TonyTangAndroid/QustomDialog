@@ -15,33 +15,33 @@ public class TestDialogActivity extends Activity {
 				"Alpha",
 				"Bravo",
 				"Charlie",
-//				"Delta",		//TODO: fix Message and customView not visible with list too long 
-//				"Echo",
-//				"Foxtrot",
-//				"Golf",
-//				"Hotel",
-//				"India",
-//				"Juliett",
-//				"Kilo",
-//				"Lima",
-//				"Mike",
-//				"November",
-//				"Oscar",
-//				"Papa",
-//				"Quebec",
-//				"Romeo",
-//				"Sierra",
-//				"Tango",
-//				"Uniform",
-//				"Victor",
-//				"Whiskey",
-//				"X-ray",
-//				"Yankee",
-//				"Zulu"
+				"Delta",
+				"Echo",
+				"Foxtrot",
+				"Golf",
+				"Hotel",
+				"India",
+				"Juliett",
+				"Kilo",
+				"Lima",
+				"Mike",
+				"November",
+				"Oscar",
+				"Papa",
+				"Quebec",
+				"Romeo",
+				"Sierra",
+				"Tango",
+				"Uniform",
+				"Victor",
+				"Whiskey",
+				"X-ray",
+				"Yankee",
+				"Zulu"
 				};
 		
 		QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
-				.setTitle("Set IP Address")
+				.setTitle("Dialog with Message, custom View and Items")
 				.setTitleColor(HALLOWEEN_ORANGE)
 				.setDividerColor(HALLOWEEN_ORANGE)
 				.setMessage("You are now entering the 10th dimension.")
@@ -72,21 +72,37 @@ public class TestDialogActivity extends Activity {
 	}
 	
 	public void button2clicked(View view) {
+		String[] sa = { "Rome", "London", "New York" };
+		QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
+				.setTitle("Dialog with Message and Items")
+				.setMessage("You are now exiting the 10th dimension.")
+				.setTitleColor(HALLOWEEN_ORANGE)
+				.setDividerColor(HALLOWEEN_ORANGE)
+				.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
+		        .setItems(sa, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
+					}
+		        });
+
+		qustomDialogBuilder.show();
+	}
+	
+	public void button3clicked(View view) {
 		String[] sa = { "Enabled item 1", "Disabled item 1", "Enabled item 2", "Disabled item 2" };
 		
 		int[] disabledItems = new int[] {1,3};
 		
 		QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
-		.setTitle("none")
-		.setTitleColor(HALLOWEEN_ORANGE)
-		.setDividerColor(HALLOWEEN_ORANGE)
-		.setMessage("You are now exiting the 10th dimension.")
-		.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
-        .setItems(sa, disabledItems, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
-			}
-        });
+				.setTitle("Dialog with disabled Items")
+				.setTitleColor(HALLOWEEN_ORANGE)
+				.setDividerColor(HALLOWEEN_ORANGE)
+				.setIcon(getResources().getDrawable(R.drawable.ic_launcher))
+				.setItems(sa, disabledItems, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
+					}
+				});
 
 		qustomDialogBuilder.show();
 	}
