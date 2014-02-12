@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 public class TestDialogActivity extends Activity {
@@ -106,6 +107,29 @@ public class TestDialogActivity extends Activity {
 
 		qustomDialogBuilder.show();
 	}
+
+    public void button4clicked(View view) {
+        String[] sa = { "Item 1", "Item 2", "Item 3" };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
+        adapter.addAll(sa);
+
+        QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
+                .setTitle("Dialog with disabled Items")
+                .setTitleColor(HALLOWEEN_ORANGE)
+                .setDividerColor(HALLOWEEN_ORANGE)
+                .setIcon(getResources().getDrawable(R.drawable.ic_launcher))
+                .setSingleChoiceItems(adapter, 1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        qustomDialogBuilder.show();
+
+        adapter.add("new item");
+        adapter.notifyDataSetChanged();
+    }
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
