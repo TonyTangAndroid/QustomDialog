@@ -109,7 +109,34 @@ public class TestDialogActivity extends Activity {
 	}
 
     public void button4clicked(View view) {
-        String[] sa = { "Item 1", "Item 2", "Item 3" };
+        String[] sa = {
+                "Alpha",
+                "Bravo",
+                "Charlie",
+                "Delta",
+                "Echo",
+                "Foxtrot",
+                "Golf",
+                "Hotel",
+                "India",
+                "Juliett",
+                "Kilo",
+                "Lima",
+                "Mike",
+                "November",
+                "Oscar",
+                "Papa",
+                "Quebec",
+                "Romeo",
+                "Sierra",
+                "Tango",
+                "Uniform",
+                "Victor",
+                "Whiskey",
+                "X-ray",
+                "Yankee",
+                "Zulu"
+        };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
         adapter.addAll(sa);

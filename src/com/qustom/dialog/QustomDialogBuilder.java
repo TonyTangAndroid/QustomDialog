@@ -204,11 +204,9 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
     }
 
     public Builder setSingleChoiceItems (ListAdapter adapter, int checkedItem, final DialogInterface.OnClickListener listener) {
-        final ListView listView = new ListView(getContext());
+        final ListView listView = (ListView) mDialogView.findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        listView.setLayoutParams(lp);
 
         if (listener != null) {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -218,9 +216,6 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
                 }
             });
         }
-
-        LinearLayout itemList = (LinearLayout) mDialogView.findViewById(R.id.items_list);
-        itemList.addView(listView);
 
         return this;
     }

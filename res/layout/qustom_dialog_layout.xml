@@ -93,4 +93,8 @@ https://github.com/android/platform_frameworks_base/blob/master/core/res/res/lay
             android:orientation="vertical">
         </LinearLayout>
     </ScrollView>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"/>
 </LinearLayout>
