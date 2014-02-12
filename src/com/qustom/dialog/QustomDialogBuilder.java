@@ -26,9 +26,13 @@ import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class QustomDialogBuilder extends AlertDialog.Builder {
@@ -195,6 +199,28 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
                 });
             }
         }
+
+        return this;
+    }
+
+    public Builder setSingleChoiceItems (ListAdapter adapter, int checkedItem, final DialogInterface.OnClickListener listener) {
+        final ListView listView = new ListView(getContext());
+        listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        listView.setLayoutParams(lp);
+
+        if (listener != null) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onClick(QustomDialogBuilder.this.mDialog, position);
+                }
+            });
+        }
+
+        LinearLayout itemList = (LinearLayout) mDialogView.findViewById(R.id.items_list);
+        itemList.addView(listView);
 
         return this;
     }
