@@ -207,6 +207,8 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
         final ListView listView = (ListView) mDialogView.findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setItemChecked(checkedItem, true);
+
 
         if (listener != null) {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
