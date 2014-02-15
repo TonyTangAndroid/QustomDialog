@@ -1,6 +1,7 @@
 package com.qustom.dialog;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -142,7 +143,7 @@ public class TestDialogActivity extends Activity {
         adapter.addAll(sa);
 
         QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
-                .setTitle("Dialog with disabled Items")
+                .setTitle("Dialog with single choice items and adapter")
                 .setTitleColor(HALLOWEEN_ORANGE)
                 .setDividerColor(HALLOWEEN_ORANGE)
                 .setIcon(getResources().getDrawable(R.drawable.ic_launcher))
@@ -151,6 +152,22 @@ public class TestDialogActivity extends Activity {
                         Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+        qustomDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(TestDialogActivity.this, "'OK' clicked...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        qustomDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(TestDialogActivity.this, "'Cancel' clicked...", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         qustomDialogBuilder.show();
 

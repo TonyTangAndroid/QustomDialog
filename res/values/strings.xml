@@ -7,6 +7,6 @@
     <string name="alert_image_content_description">Alert Image</string>
     <string name="ip_address_text">IP address</string>
     <string name="ip_address_hint">0.0.0.0</string>
-    <string name="_4th_button_text">Custom dialog with single choice with adapter</string>
+    <string name="_4th_button_text">Custom dialog with single choice items and adapter</string>
 
 </resources>
