@@ -1,9 +1,11 @@
 package com.qustom.dialog;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 public class TestDialogActivity extends Activity {
@@ -106,6 +108,72 @@ public class TestDialogActivity extends Activity {
 
 		qustomDialogBuilder.show();
 	}
+
+    public void button4clicked(View view) {
+        String[] sa = {
+                "Alpha",
+                "Bravo",
+                "Charlie",
+                "Delta",
+                "Echo",
+                "Foxtrot",
+                "Golf",
+                "Hotel",
+                "India",
+                "Juliett",
+                "Kilo",
+                "Lima",
+                "Mike",
+                "November",
+                "Oscar",
+                "Papa",
+                "Quebec",
+                "Romeo",
+                "Sierra",
+                "Tango",
+                "Uniform",
+                "Victor",
+                "Whiskey",
+                "X-ray",
+                "Yankee",
+                "Zulu"
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
+        adapter.addAll(sa);
+
+        QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
+                .setTitle("Dialog with single choice items and adapter")
+                .setTitleColor(HALLOWEEN_ORANGE)
+                .setDividerColor(HALLOWEEN_ORANGE)
+                .setIcon(getResources().getDrawable(R.drawable.ic_launcher))
+                .setSingleChoiceItems(adapter, 1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(TestDialogActivity.this, "item " + which + " clicked...", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        qustomDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(TestDialogActivity.this, "'OK' clicked...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        qustomDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(TestDialogActivity.this, "'Cancel' clicked...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        qustomDialogBuilder.show();
+
+        adapter.add("new item");
+        adapter.notifyDataSetChanged();
+    }
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

@@ -21,14 +21,21 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class QustomDialogBuilder extends AlertDialog.Builder {
@@ -198,7 +205,50 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
 
         return this;
     }
-    
+
+    @Override
+    public Builder setSingleChoiceItems (ListAdapter adapter, int checkedItem, final DialogInterface.OnClickListener listener) {
+        final ListView listView = (ListView) mDialogView.findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setItemChecked(checkedItem, true);
+
+
+        if (listener != null) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onClick(QustomDialogBuilder.this.mDialog, position);
+                }
+            });
+        }
+
+        return this;
+    }
+
+    @Override
+    public Builder setSingleChoiceItems(CharSequence[] items, int checkedItem,
+                                        final DialogInterface.OnClickListener listener) {
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
+                android.R.layout.simple_list_item_single_choice, android.R.id.text1, items);
+
+        return this.setSingleChoiceItems(adapter, checkedItem, listener);
+    }
+
+    @Override
+    public Builder setSingleChoiceItems(int itemsId, int checkedItem,  final DialogInterface.OnClickListener listener) {
+        return this.setSingleChoiceItems(getContext().getResources().getTextArray(itemsId), checkedItem, listener);
+    }
+
+    public Builder setSingleChoiceItems(Cursor cursor, int checkedItem, String labelColumn,
+                                        final DialogInterface.OnClickListener listener) {
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getContext(),
+                android.R.layout.simple_list_item_single_choice, cursor,
+                new String[]{labelColumn}, new int[]{android.R.id.text1});
+
+        return this.setSingleChoiceItems(adapter, checkedItem, listener);
+    }
+
     public boolean isEnabled(int position, int[] disabledOptions) {
     	if (disabledOptions != null) {
 	    	for (int i = 0; i < disabledOptions.length; i++) {
