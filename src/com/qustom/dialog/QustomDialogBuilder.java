@@ -27,7 +27,6 @@ import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -272,14 +271,14 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
 			public boolean onTouch(View v, MotionEvent event){
 				if(event.getAction() == MotionEvent.ACTION_DOWN) {
 
-                    v.setBackgroundColor(getContext().getResources().getColor(android.R.color.darker_gray));
+                    v.setBackgroundColor(mContext.getResources().getColor(android.R.color.darker_gray));
                 }
 				
 				if(event.getAction() == MotionEvent.ACTION_UP || 
 	                	event.getAction() == MotionEvent.ACTION_MOVE ||
 	                	event.getAction() == MotionEvent.ACTION_CANCEL) {
                 	
-                    v.setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
+                    v.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
                 }
                 
                 return false;

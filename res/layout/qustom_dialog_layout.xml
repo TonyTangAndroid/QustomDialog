@@ -48,9 +48,10 @@ https://github.com/android/platform_frameworks_base/blob/master/core/res/res/lay
                 android:paddingEnd="8dip"
                 android:src="@null" 
                 android:contentDescription="@string/alert_image_content_description"/>
-            <com.android.internal.widget.DialogTitle android:id="@+id/alertTitle"
-                style="@android:style/TextAppearance.Holo.DialogWindowTitle"
-                android:singleLine="true"
+            <TextView android:id="@+id/alertTitle"
+                style="?android:attr/textAppearanceLarge"
+                android:textColor="#33b5e5"
+                android:maxLines="2"
                 android:ellipsize="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +61,7 @@ https://github.com/android/platform_frameworks_base/blob/master/core/res/res/lay
             android:layout_width="match_parent"
             android:layout_height="2dip"
             android:visibility="visible"
-            android:background="@android:color/holo_blue_light" />
+            android:background="#33b5e5" />
     </LinearLayout>
 
     <ScrollView android:id="@+id/contentPanel"
