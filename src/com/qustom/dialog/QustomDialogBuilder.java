@@ -54,6 +54,8 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
 	private View mDivider;
 	/** optional custom panel image */
 	private FrameLayout mCustom;
+    /**Keep Context as Member to support Apis below 11*/
+    private Context mContext;
 	
     public QustomDialogBuilder(Context context) {
         super(context);
@@ -66,6 +68,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
         mIcon = (ImageView) mDialogView.findViewById(R.id.icon);
         mDivider = mDialogView.findViewById(R.id.titleDivider);
         mCustom = (FrameLayout) mDialogView.findViewById(R.id.customPanel);
+        mContext = context;
 	}
     
     /**
@@ -156,7 +159,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
      */
     @Override
     public QustomDialogBuilder setItems(int itemsId, final DialogInterface.OnClickListener listener) {
-        return setItems(getContext().getResources().getTextArray(itemsId), listener);
+        return setItems(mContext.getResources().getTextArray(itemsId), listener);
     }
 
     /**
@@ -171,7 +174,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
     }
     
     public Builder setItems(int itemsId, int[] disabledOptions, final DialogInterface.OnClickListener listener) {
-    	CharSequence[] items = getContext().getResources().getTextArray(itemsId);
+    	CharSequence[] items = mContext.getResources().getTextArray(itemsId);
     	return setItems(items, disabledOptions, listener);
     }
     
@@ -229,7 +232,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
     @Override
     public Builder setSingleChoiceItems(CharSequence[] items, int checkedItem,
                                         final DialogInterface.OnClickListener listener) {
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mContext,
                 android.R.layout.simple_list_item_single_choice, android.R.id.text1, items);
 
         return this.setSingleChoiceItems(adapter, checkedItem, listener);
@@ -237,12 +240,12 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
 
     @Override
     public Builder setSingleChoiceItems(int itemsId, int checkedItem,  final DialogInterface.OnClickListener listener) {
-        return this.setSingleChoiceItems(getContext().getResources().getTextArray(itemsId), checkedItem, listener);
+        return this.setSingleChoiceItems(mContext.getResources().getTextArray(itemsId), checkedItem, listener);
     }
 
     public Builder setSingleChoiceItems(Cursor cursor, int checkedItem, String labelColumn,
                                         final DialogInterface.OnClickListener listener) {
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getContext(),
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(mContext,
                 android.R.layout.simple_list_item_single_choice, cursor,
                 new String[]{labelColumn}, new int[]{android.R.id.text1});
 
@@ -259,7 +262,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
     }
 
     private TextView inflateItem(String itemText) {
-    	TextView listItem = (TextView) View.inflate(getContext(), R.layout.qustom_dialog_item_layout, null);
+    	TextView listItem = (TextView) View.inflate(mContext, R.layout.qustom_dialog_item_layout, null);
         TextView icaoTextView = (TextView) listItem.findViewById(R.id.item_text);
         icaoTextView.setText(itemText);
         
@@ -287,7 +290,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder {
     }
 
     private View inflateDivider() {
-        View listDivider = View.inflate(getContext(), R.layout.qustom_dialog_items_divider, null);
+        View listDivider = View.inflate(mContext, R.layout.qustom_dialog_items_divider, null);
         return listDivider;
     }
     

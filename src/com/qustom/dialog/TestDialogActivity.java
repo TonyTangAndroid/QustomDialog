@@ -140,7 +140,9 @@ public class TestDialogActivity extends Activity {
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice);
-        adapter.addAll(sa);
+        for(int a = 0; a < sa.length; a++) {
+            adapter.add(sa[a]);
+        }
 
         QustomDialogBuilder qustomDialogBuilder = (QustomDialogBuilder) new QustomDialogBuilder(this)
                 .setTitle("Dialog with single choice items and adapter")
