@@ -13,13 +13,16 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dip"
-        android:text="IP Address" />
+        android:text="@string/ip_address_text" />
 
     <EditText
         android:id="@+id/ip_edit_text"
         style="@android:style/Widget.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+		android:digits="0123456789."
+        android:hint="@string/ip_address_hint" 
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dip"
         android:layout_marginRight="16dip"

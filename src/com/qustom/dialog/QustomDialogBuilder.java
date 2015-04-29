@@ -1,20 +1,47 @@
 package com.qustom.dialog;
 
+/*
+	Copyright 2010 The Android Open Source Project
+	Copyright 2013 Daniel Smith
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+   	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.qustom.dialog.R;
-
-public class QustomDialogBuilder extends AlertDialog.Builder{
+public class QustomDialogBuilder extends AlertDialog.Builder {
 
 	/** The custom_body layout */
 	private View mDialogView;
+    private AlertDialog mDialog;
 	
 	/** optional dialog title layout */
 	private TextView mTitle;
@@ -24,6 +51,10 @@ public class QustomDialogBuilder extends AlertDialog.Builder{
 	private TextView mMessage;
 	/** The colored holo divider. You can set its color with the setDividerColor method */
 	private View mDivider;
+	/** optional custom panel image */
+	private FrameLayout mCustom;
+    /**Keep Context as Member to support Apis below 11*/
+    private Context mContext;
 	
     public QustomDialogBuilder(Context context) {
         super(context);
@@ -35,7 +66,27 @@ public class QustomDialogBuilder extends AlertDialog.Builder{
         mMessage = (TextView) mDialogView.findViewById(R.id.message);
         mIcon = (ImageView) mDialogView.findViewById(R.id.icon);
         mDivider = mDialogView.findViewById(R.id.titleDivider);
+        mCustom = (FrameLayout) mDialogView.findViewById(R.id.customPanel);
+        mContext = context;
 	}
+    
+    /**
+     * Use this method to reference the whole dialog view, i.e. when inflating a custom 
+     * view with {@link #setCustomView(int, Context)} and you want to find an id from the
+     * inflated layout.
+     * 
+     *   example: 
+     *   
+     *   CheckBox showAgain = (CheckBox) myQustomDialogBuilder.getDialogView().findViewById(R.id.inflated_checkbox);
+     *   if (!showAgain.isChecked()) {
+     *   	// do something
+     *   }
+     *   
+     * @return the qustom dialog view
+     */
+    public View getDialogView() {
+    	return mDialogView;
+    }
 
     /** 
      * Use this method to color the divider between the title and content.
@@ -73,6 +124,7 @@ public class QustomDialogBuilder extends AlertDialog.Builder{
 
     @Override
     public QustomDialogBuilder setIcon(int drawableResId) {
+    	mIcon.setVisibility(View.VISIBLE);
         mIcon.setImageResource(drawableResId);
         return this;
     }
@@ -93,14 +145,160 @@ public class QustomDialogBuilder extends AlertDialog.Builder{
      */
     public QustomDialogBuilder setCustomView(int resId, Context context) {
     	View customView = View.inflate(context, resId, null);
-    	((FrameLayout)mDialogView.findViewById(R.id.customPanel)).addView(customView);
+    	mCustom.setVisibility(View.VISIBLE);
+    	mCustom.addView(customView);
     	return this;
+    }
+
+    /**
+     * Set a list of items to be displayed in the dialog as the content, you will be notified of the
+     * selected item via the supplied listener. This should be an array type i.e. R.array.foo
+     *
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @Override
+    public QustomDialogBuilder setItems(int itemsId, final DialogInterface.OnClickListener listener) {
+        return setItems(mContext.getResources().getTextArray(itemsId), listener);
+    }
+
+    /**
+     * Set a list of items to be displayed in the dialog as the content, you will be notified of the
+     * selected item via the supplied listener.
+     *
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    @Override
+    public QustomDialogBuilder setItems(CharSequence[] items, final DialogInterface.OnClickListener listener) {
+    	return (QustomDialogBuilder) setItems(items, null, listener);
+    }
+    
+    public Builder setItems(int itemsId, int[] disabledOptions, final DialogInterface.OnClickListener listener) {
+    	CharSequence[] items = mContext.getResources().getTextArray(itemsId);
+    	return setItems(items, disabledOptions, listener);
+    }
+    
+    public Builder setItems(CharSequence[] items, int[] disabledOptions, final DialogInterface.OnClickListener listener) {
+        LinearLayout itemList = (LinearLayout) mDialogView.findViewById(R.id.items_list);
+
+        for (int i = 0; i < items.length; i++) {
+            final int currentItem = i;
+            TextView listItem = inflateItem(items[i].toString());
+            View divider = inflateDivider();
+            
+            if (disabledOptions != null) {
+            	final boolean enabled = isEnabled(i, disabledOptions);
+				listItem.setEnabled(enabled);
+            	if (!enabled) listItem.setTextColor(Color.GRAY);
+            }
+            
+            itemList.addView(listItem);
+            if (i+1 != items.length) itemList.addView(divider);
+            if (listener != null) {
+            	// fix
+                listItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onClick(mDialog, currentItem);
+                        mDialog.dismiss();
+                    }
+                });
+            }
+        }
+
+        return this;
+    }
+
+    @Override
+    public Builder setSingleChoiceItems (ListAdapter adapter, int checkedItem, final DialogInterface.OnClickListener listener) {
+        final ListView listView = (ListView) mDialogView.findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setItemChecked(checkedItem, true);
+
+
+        if (listener != null) {
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onClick(QustomDialogBuilder.this.mDialog, position);
+                }
+            });
+        }
+
+        return this;
+    }
+
+    @Override
+    public Builder setSingleChoiceItems(CharSequence[] items, int checkedItem,
+                                        final DialogInterface.OnClickListener listener) {
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mContext,
+                android.R.layout.simple_list_item_single_choice, android.R.id.text1, items);
+
+        return this.setSingleChoiceItems(adapter, checkedItem, listener);
+    }
+
+    @Override
+    public Builder setSingleChoiceItems(int itemsId, int checkedItem,  final DialogInterface.OnClickListener listener) {
+        return this.setSingleChoiceItems(mContext.getResources().getTextArray(itemsId), checkedItem, listener);
+    }
+
+    public Builder setSingleChoiceItems(Cursor cursor, int checkedItem, String labelColumn,
+                                        final DialogInterface.OnClickListener listener) {
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(mContext,
+                android.R.layout.simple_list_item_single_choice, cursor,
+                new String[]{labelColumn}, new int[]{android.R.id.text1});
+
+        return this.setSingleChoiceItems(adapter, checkedItem, listener);
+    }
+
+    public boolean isEnabled(int position, int[] disabledOptions) {
+    	if (disabledOptions != null) {
+	    	for (int i = 0; i < disabledOptions.length; i++) {
+	    		if (position == disabledOptions[i]) return false;
+	    	}
+    	}
+        return true;
+    }
+
+    private TextView inflateItem(String itemText) {
+    	TextView listItem = (TextView) View.inflate(mContext, R.layout.qustom_dialog_item_layout, null);
+        TextView icaoTextView = (TextView) listItem.findViewById(R.id.item_text);
+        icaoTextView.setText(itemText);
+        
+        listItem.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event){
+				if(event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    v.setBackgroundColor(mContext.getResources().getColor(android.R.color.darker_gray));
+                }
+				
+				if(event.getAction() == MotionEvent.ACTION_UP || 
+	                	event.getAction() == MotionEvent.ACTION_MOVE ||
+	                	event.getAction() == MotionEvent.ACTION_CANCEL) {
+                	
+                    v.setBackgroundColor(mContext.getResources().getColor(android.R.color.transparent));
+                }
+                
+                return false;
+            }
+		});
+        
+        return listItem;
+    }
+
+    private View inflateDivider() {
+        View listDivider = View.inflate(mContext, R.layout.qustom_dialog_items_divider, null);
+        return listDivider;
     }
     
     @Override
     public AlertDialog show() {
     	if (mTitle.getText().equals("")) mDialogView.findViewById(R.id.topPanel).setVisibility(View.GONE);
-    	return super.show();
+    	// hide also message TextView if empty
+    	if (mMessage.getText().equals("")) mDialogView.findViewById(R.id.contentPanel).setVisibility(View.GONE);
+    	mDialog = super.show();
+        return mDialog;
     }
-
 }
